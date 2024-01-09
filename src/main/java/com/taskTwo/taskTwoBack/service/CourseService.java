@@ -11,10 +11,11 @@ import com.taskTwo.taskTwoBack.model.Course;
 
 public interface CourseService {
 	void createCourse(Course course);
-    Optional<List<Course>> getAllCourses();
+    List<Course> getAllCourses();
     Course addCourse(Course course);
     Course updateCourse(Course course);
-    void deleteCourse(String id);
-    void uploadImage(String courseId, MultipartFile file) throws IOException;
-    byte[] getImage(String courseId) throws IOException;
+	public Course findById(Long id);
+    void deleteCourse(Long id);
+    void uploadImage(Long courseId, MultipartFile file) throws IOException;
+    byte[] getImage(Long courseId) throws IOException;
 }

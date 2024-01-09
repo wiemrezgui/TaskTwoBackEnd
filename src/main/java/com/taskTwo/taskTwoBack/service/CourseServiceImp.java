@@ -15,8 +15,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class CourseServiceImp implements CourseService {
 
     @Autowired
@@ -27,13 +25,11 @@ public class CourseServiceImp implements CourseService {
     }
 
     @Override
-    public Optional<List<Course>> getAllCourses() {
-        List<Course> courseList = courseRepository.findAll();
-        return Optional.ofNullable(courseList);
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
     }
     @Override
     public Course addCourse(Course course) {
-        course.setId(UUID.randomUUID().toString());
         return courseRepository.save(course);
     }
     @Override
@@ -42,11 +38,11 @@ public class CourseServiceImp implements CourseService {
     }
 
     @Override
-    public void deleteCourse(String id) {
+    public void deleteCourse(Long id) {
         courseRepository.deleteById(id);
     }
     @Override
-    public void uploadImage(String courseId, MultipartFile file) throws IOException {
+    public void uploadImage(Long courseId, MultipartFile file) throws IOException {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
 
         if (optionalCourse.isPresent()) {
@@ -57,17 +53,22 @@ public class CourseServiceImp implements CourseService {
             throw new RuntimeException("Course not found");
         }
     }
-
     @Override
-    public byte[] getImage(String courseId) throws IOException {
+    public byte[] getImage(Long courseId) throws IOException {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
 
-        if (optionalCourse.isPresent()) {
-            Course course = optionalCourse.get();
-            return CourseController.decompressBytes(course.getPicByte());
+       if (optionalCourse.isPresent()) {
+      Course course = optionalCourse.get();
+           return CourseController.decompressBytes(course.getPicByte());
         } else {
-            throw new RuntimeException("Course not found");
+           throw new RuntimeException("Course not found");
         }
     }
+
+	@Override
+	public Course findById(Long id) {
+		Optional<Course> course = courseRepository.findById(id);
+		return course.isPresent() ? course.get() : null;
+	}
 
 }

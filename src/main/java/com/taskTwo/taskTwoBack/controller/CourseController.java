@@ -26,36 +26,32 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Course>> getAll() {
-        Optional<List<Course>> courseListOptional = courseService.getAllCourses();
-        if (courseListOptional.isPresent()) {
-            List<Course> courseList = courseListOptional.get();
-            return new ResponseEntity<>(courseList, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping
+    public List<Course> getAllCourses() {
+		return courseService.getAllCourses();
     }
-
+    @GetMapping("/{id}")
+	public Course getCourseById(@PathVariable Long id) {
+		return courseService.findById(id);
+	}
     @PostMapping("/create")
-    public ResponseEntity<Course> addCourse(@RequestBody Course course) {
-        Course createdCourse = courseService.addCourse(course);
-        return new ResponseEntity<>(createdCourse, HttpStatus.CREATED);
+    public Course CreateCourse(@RequestBody Course course) {
+        return courseService.addCourse(course);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Course> updateCourse(@RequestBody Course course) {
-        Course updatedCourse = courseService.updateCourse(course);
-        return new ResponseEntity<>(updatedCourse, HttpStatus.OK);
+    public Course updateCourse(@RequestBody Course course) {
+        return courseService.updateCourse(course);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteCourse(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteCourse(@PathVariable("id") Long id) {
         courseService.deleteCourse(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    
     @PostMapping("/uploadImage/{id}")
-    public ResponseEntity<?> uploadImage(@PathVariable("id") String courseId, @RequestParam("imageFile") MultipartFile file) {
+    public ResponseEntity<?> uploadImage(@PathVariable("id") Long courseId, @RequestParam("imageFile") MultipartFile file) {
         try {
             courseService.uploadImage(courseId, file);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -65,7 +61,7 @@ public class CourseController {
     }
 
     @GetMapping("/getImage/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable("id") String courseId) {
+    public ResponseEntity<byte[]> getImage(@PathVariable("id") Long courseId) {
         try {
             byte[] imageBytes = courseService.getImage(courseId);
             return ResponseEntity.ok().contentType(org.springframework.http.MediaType.IMAGE_JPEG).body(imageBytes);
@@ -73,7 +69,7 @@ public class CourseController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    public byte[] compressBytes(byte[] data) throws IOException {
+    public static byte[] compressBytes(byte[] data) throws IOException {
     	Deflater deflater = new Deflater();
         deflater.setInput(data);
         deflater.finish();
@@ -90,7 +86,7 @@ public class CourseController {
         return outputStream.toByteArray(); 
 		
     }
-    public byte[] decompressBytes(byte[] data) throws IOException {
+    public static byte[] decompressBytes(byte[] data) throws IOException {
     	Inflater inflater = new Inflater();
         inflater.setInput(data);
 
