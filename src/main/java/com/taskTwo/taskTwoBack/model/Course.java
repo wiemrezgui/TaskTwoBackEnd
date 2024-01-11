@@ -11,10 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 @ToString
 @Entity
 @Table(name="course")
@@ -25,19 +24,7 @@ public class Course {
     private Long id;
     private String name;
     private float price;
-    @Column(name = "image", length = 1000)
-	private byte[] picByte;
-    public Course() {}
-    public Course(String name, float price,byte[] picByte) {
-		this.name = name;
-		this.price=price;
-		this.picByte = picByte;
-	}
-	public void setPicByte(byte[] compressedBytes) {
-	    this.picByte = compressedBytes;	}
-	public byte[] getPicByte() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Column(name = "image",length=1000)
+	private byte[] image;
 }
 
